@@ -1,19 +1,63 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
+import Admin from './Components/Quanly'; // Layout Admin
+import Login from './Page/Login/login';
+import Lichlamviec from './Page/lichlamviec/lichlamviec';
+import Lichhenkham from './Page/lichhenkham/lichhenkham';
+import Thongke from './Page/thongke/thongke';
+
+// Kiểm tra trạng thái đăng nhập
+const isLoggedIn = () => {
+  // Kiểm tra xem người dùng có token hoặc thông tin đăng nhập trong sessionStorage
+  return sessionStorage.getItem('token') !== null;
+};
+
+// Tạo một PrivateRoute component để bảo vệ các route Admin
+const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
+  if (!isLoggedIn()) {
+    // Nếu chưa đăng nhập, chuyển hướng về trang Login
+    return <Navigate to="/Login" replace />;
+  }
+  return <>{children}</>; // Nếu đã đăng nhập, cho phép truy cập
+};
+
+// Định nghĩa các route
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <PrivateRoute><Admin /></PrivateRoute>, // Route Admin bảo vệ
+    children: [
+      {
+        path: 'lichlamviec',
+        element: <Lichlamviec />, // Trang con
+      },
+      {
+        path: 'lichhenkham',
+        element: <Lichhenkham />, // Trang con
+      },
+      {
+        path: 'thongke',
+        element: <Thongke />, // Trang con
+      }
+    ],
+  },
+  {
+    path: '/Login',
+    element: <Login />, // Trang Login
+  },
+]);
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+// Đo lường hiệu suất
 reportWebVitals();
