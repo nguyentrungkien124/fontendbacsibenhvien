@@ -7,6 +7,7 @@ import Login from './Page/Login/login';
 import Lichlamviec from './Page/lichlamviec/lichlamviec';
 import Lichhenkham from './Page/lichhenkham/lichhenkham';
 import Thongke from './Page/thongke/thongke';
+import Thongtincanhan from './Page/thongtincanhan/thongtincanhan';
 
 // Kiểm tra trạng thái đăng nhập
 const isLoggedIn = () => {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: 'thongke',
         element: <Thongke />, // Trang con
+      },
+      {
+        path: 'thongtincanhan',
+        element: <Thongtincanhan />, // Trang con
       }
     ],
   },

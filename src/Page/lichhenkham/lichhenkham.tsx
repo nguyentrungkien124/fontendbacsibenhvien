@@ -138,6 +138,7 @@ const Lichhenkham: React.FC = () => {
     try {
       setLoading(true);
       const response = await fetch(`http://localhost:9999/api/datlich/getLichKhamByBacSi/${bacsiID}/1/1000`);
+      console.log(data)
       if (!response.ok) throw new Error('Failed to fetch data');
       const result = await response.json();
       setData(result);
@@ -193,15 +194,29 @@ const Lichhenkham: React.FC = () => {
       key: 'ca_dat',
       ellipsis: true,
       render: (text: string) => {
-        if (!text) return '';
+        // Ensure text is defined and not an empty string
+        if (!text || typeof text !== 'string') return '';
+    
+        // Try to split the text into a time range (if applicable)
         const times = text.split('-');
-        const formatTime = (time: string) => {
-          const [hours, minutes] = time.split(':');
-          return `${hours}:${minutes}`;
-        };
-        return `${formatTime(times[0])}-${formatTime(times[1])}`;
+        
+        // If it's a valid time range, format the times
+        if (times.length === 2) {
+          const formatTime = (time: string) => {
+            const [hours, minutes] = time.split(':');
+            return `${hours}:${minutes}`;
+          };
+    
+          // Safely format the time range and return it
+          return `${formatTime(times[0])}-${formatTime(times[1])}`;
+        }
+    
+        // If not a valid time range, return the original text
+        return text;
       },
     },
+    
+
     {
       title: 'Chuyên khoa',
       dataIndex: 'chuyen_khoa',
